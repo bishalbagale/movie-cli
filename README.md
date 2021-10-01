@@ -23,5 +23,5 @@ Run:
 python main.py
 ```
 
-> Now watch your favourite movies via your terminal and look cool infront of your friends !
+> Now watch your favourite movies and series directly via your terminal!
 > Who needs bitTorrent when you got `movie-cli` ? 😎
