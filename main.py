@@ -1,9 +1,9 @@
-import colorama
-from requests_html import HTMLSession
-from colorama import Fore
 import subprocess
 import sys
 import time
+
+from colorama import Fore
+from requests_html import HTMLSession
 
 session = HTMLSession()
 # colorama.init()
@@ -17,14 +17,16 @@ magenta = Fore.MAGENTA
 
 
 def banner():
-    print(f"""\{magenta}
+    print(
+        f"""\{magenta}
 
 ███╗░░░███╗░█████╗░██╗░░░██╗██╗███████╗░░░░░░░█████╗░██╗░░░░░██╗
 ████╗░████║██╔══██╗██║░░░██║██║██╔════╝░░░░░░██╔══██╗██║░░░░░██║
 ██╔████╔██║██║░░██║╚██╗░██╔╝██║█████╗░░█████╗██║░░╚═╝██║░░░░░██║
 ██║╚██╔╝██║██║░░██║░╚████╔╝░██║██╔══╝░░╚════╝██║░░██╗██║░░░░░██║
 ██║░╚═╝░██║╚█████╔╝░░╚██╔╝░░██║███████╗░░░░░░╚█████╔╝███████╗██║
-╚═╝░░░░░╚═╝░╚════╝░░░░╚═╝░░░╚═╝╚══════╝░░░░░░░╚════╝░╚══════╝╚═╝""")
+╚═╝░░░░░╚═╝░╚════╝░░░░╚═╝░░░╚═╝╚══════╝░░░░░░░╚════╝░╚══════╝╚═╝"""
+    )
     print()
     print()
     print(f"{green}\t\t\t\t\t developed by: bishalbagale{white}")
@@ -33,8 +35,7 @@ def banner():
 
 def main():
     currentPage = 1
-    category = input(
-        f"Enter your prefered category (series/movie)[s/m]: ")
+    category = input(f"Enter your prefered category (series/movie)[s/m]: ")
     if category.upper() == "S":
         category = "TV"
     elif category.upper() == "M":
@@ -61,14 +62,16 @@ def nextpageLink(rawLinks):
 def scraper(category, searchParam, currentPage):
     count = 0  # initial no. of search results
     searchParam = searchParam.replace(" ", "%20")
-    url = f"https://www.1377x.to/category-search/{searchParam}/{category}/{currentPage}/"
+    url = (
+        f"https://www.1377x.to/category-search/{searchParam}/{category}/{currentPage}/"
+    )
     r = session.get(url)
 
     # get the link to the next page from search results
     tbody = r.html.find(
-        "tbody", first=True)  # get the tablebody containing search result
-    searchResults = tbody.find(
-        "tr")  # list of search results //contents of the table
+        "tbody", first=True
+    )  # get the tablebody containing search result
+    searchResults = tbody.find("tr")  # list of search results //contents of the table
     resultDict = {}  # dictionary of link to next page
     if len(searchResults) != 0:  # validate the result
 
@@ -87,17 +90,18 @@ def scraper(category, searchParam, currentPage):
             else:
                 color = lightCyan
             print(
-                f"{color}{count}) {name} -->se:{seeds} -->le:{leeches} -->size:{size}")
+                f"{color}{count}) {name} -->se:{seeds} -->le:{leeches} -->size:{size}"
+            )
         try:  # check if multiple page results are available
 
-            page = r.html.find(".pagination", first=True).find(
-                "ul", first=True).find(
-                    "li"
-            )[-1].text  # total no of pages
+            page = (
+                r.html.find(".pagination", first=True)
+                .find("ul", first=True)
+                .find("li")[-1]
+                .text
+            )  # total no of pages
             print()
-            print(
-                f"\t\t\t\t\t\t\t{yellow}page : {currentPage}/{page}{white}"
-            )
+            print(f"\t\t\t\t\t\t\t{yellow}page : {currentPage}/{page}{white}")
             print(
                 f"{green}\n# press p to change page or press the indexed no. to choose the content and press enter{white}"
             )
@@ -130,7 +134,11 @@ def chooseContent(resultDict, category, searchParam):
 
 def moreResults(category, searchParam):  # change page no. / view more results
     pg = input("goto page-no. : ")
-    scraper(category, searchParam, pg,)
+    scraper(
+        category,
+        searchParam,
+        pg,
+    )
 
 
 def contentChoosed(mLink):  # Scrape the torrent link of the content
@@ -175,15 +183,15 @@ def play(torrentLink):  # play the torrentlink
         print(f"\n {red}invalid input !{white}")
         play(torrentLink)
 
-    if sys.platform.startswith('win32'):  # for windows
+    if sys.platform.startswith("win32"):  # for windows
         subprocess.call(cmd, shell=True)
-    elif sys.platform.startswith('linux'):  # for linux
+    elif sys.platform.startswith("linux") or sys.platform.startswith(
+        "darwin"
+    ):  # for linux and osx
         subprocess.call(cmd)
-    elif sys.platform.startswith('darwin'):  # for osx
-        print("\n tf you doing here rich kid ? pay for your movie !!")  # DIY
 
 
 # calling
 banner()
-time.sleep(.5)
+time.sleep(0.5)
 main()
