@@ -1,2 +1,2 @@
-request-html
+requests-html
 colorama
